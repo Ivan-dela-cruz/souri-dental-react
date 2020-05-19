@@ -55,19 +55,33 @@ class PatientsList extends Component {
                                         </i>
                                     </a>
                                     <div className="dropdown-menu dropdown-menu-right">
+                                        <a className="dropdown-item" href="#" data-toggle="modal"
+                                           onClick={(e) => this.props.onSelectedDeleteUser(user)}
+                                           data-target="#delete_patient">
+                                            <i className="fa fa-eye m-r-5 text-primary"></i>
+                                            Visualizar
+                                        </a>
                                         <button className="dropdown-item"
                                            onClick={(e)=>this.props.dataEditUser(user)}
                                            data-toggle="modal"
                                            data-target="#add_group">
-                                            <i className="fa fa-pencil m-r-5"></i>
+                                            <i className="fa fa-pencil m-r-5 text-warning"></i>
                                             Edit
                                         </button>
                                         <a className="dropdown-item" href="#" data-toggle="modal"
-                                           onClick={(e) => this.props.onSelectedDeleteUser(user)}
+                                           onClick={(e) => this.props.changeStatus(user.id)}
                                            data-target="#delete_patient">
-                                            <i className="fa fa-trash-o m-r-5"></i>
-                                            Delete
+                                            <i className={user.status==='inactivo'?"fa fa-refresh m-r-5 text-success":"fa fa-refresh m-r-5 text-secondary"}></i>
+                                            {user.status==='inactivo'?'Habilitar':'Deshabilitar'}
+
                                         </a>
+                                        <a className="dropdown-item" href="#" data-toggle="modal"
+                                           onClick={(e) => this.props.onDelete(user.id)}
+                                           data-target="#delete_patient">
+                                            <i className="fa fa-trash m-r-5 text-danger"></i>
+                                            Eliminar
+                                        </a>
+
                                     </div>
                                 </div>
                             </td>

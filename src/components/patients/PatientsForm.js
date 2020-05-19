@@ -469,7 +469,7 @@ class PatientsForm extends Component {
             <React.Fragment>
                 {this.openModalFormPatients()}
                 {this.modalFormPatients()}
-                {this.modalDeletePatient()}
+
             </React.Fragment>
         );
     }

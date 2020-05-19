@@ -6,7 +6,7 @@ import PatientsList from "./PatientsList";
 import Pagination from "react-js-pagination";
 import PatientsForm from "./PatientsForm";
 import CitiesProvince from "../../data/CitiesProvince";
-
+import Swal from 'sweetalert2'
 
 class Patients extends Component {
     constructor(props) {
@@ -62,7 +62,7 @@ class Patients extends Component {
             activePage: 1,
             itemsCountPerPage: 1,
             totalItemsCount: 1,
-            pageRangeDisplayed: 3,
+            pageRangeDisplayed: 10,
         }
         this.resetPagination = this.resetPagination.bind(this)
         this.handlePageChange = this.handlePageChange.bind(this)
@@ -76,7 +76,35 @@ class Patients extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.changeErrors = this.changeErrors.bind(this)
         this.onDelete = this.onDelete.bind(this)
+        this.changeStatus = this.changeStatus.bind(this)
 
+    }
+
+    alertSweet = () => {
+        Swal.fire({
+            title: 'Esta seguro en descativar?',
+            text: 'You will not be able to recover this imaginary file!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.value) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your imaginary file has been deleted.',
+                    'success'
+                )
+                // For more information about handling dismissals please visit
+                // https://sweetalert2.github.io/#handling-dismissals
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
+            }
+        })
     }
 
     async componentDidMount() {
@@ -177,7 +205,7 @@ class Patients extends Component {
         const text_search = this.state.text_search
         const parameter_search = this.state.parameter_search
         //http://localhost/souri/public/api/api-get-filter-users?text_search=1750474048&parameter_search=ci
-        const api_url = `${url}/api/api-get-filter-users?page=${pageNumber}&text_search=${text_search}&parameter_search=${parameter_search}`
+        const api_url = `${url}/api/api-get-patients?page=${pageNumber}&text_search=${text_search}&parameter_search=${parameter_search}`
         Axios.get(api_url)
             .then(data => {
                 //console.log(data.data.users.data)
@@ -339,12 +367,45 @@ class Patients extends Component {
 
     //METODO PARA ELIMINAR UN USUARIO MEDIANTE AXIOS
     onDelete(id) {
-        Axios.delete(`${url}/api/api-delete-user/${id}`)
-            .then((res) => {
-                this.resetPagination()
-                this.componentDidMount()
-                this.resetErrors()
-            })
+
+        Swal.fire({
+            title: 'Esta seguro de eliminar este registro ?',
+            text: 'Usted no prodra revertir esta acción!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, Estoy seguro!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.value) {
+                Axios.delete(`${url}/api/api-delete-user/${id}`)
+                    .then((res) => {
+                        Swal.fire(
+                            'Eliminado!',
+                            'El registro ha sido eliminado con éxito.',
+                            'success'
+                        )
+                        this.resetPagination()
+                        this.componentDidMount()
+                        this.resetErrors()
+                    }).catch(function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Algo ha salido mal!'
+                    })
+                })
+
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire(
+                    'Cancelado',
+                    '',
+                    'error'
+                )
+            }
+        })
+
+
     }
 
     ///RESTBLECER TODOS LOS ESTADOS POR DEFECTO
@@ -421,9 +482,44 @@ class Patients extends Component {
         console.log(this.state.form.url_image)
     }
 
-    renderNavigation = ()=>{
-        if(this.state.users.length>3){
-            return(
+    //METODO PARA DESACTIVAR EL ESTADO DE LOS PACIENTES
+    changeStatus(id) {
+        Swal.fire({
+            title: '¿Está seguro en cambiar el Estado?',
+            text: '',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, cambiar',
+            cancelButtonText: 'No, mantener'
+        }).then((result) => {
+            if (result.value) {
+                Axios.put(`${url}/api/api-change-status-user`, {
+                    'id': id
+                }).then(function (response) {
+
+                    this.resetPagination()
+                    this.componentDidMount()
+                    this.resetErrors()
+
+                }).catch(function (error) {
+
+                    console.log(error)
+                })
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire(
+                    'Cancelado',
+                    '',
+                    'error'
+                )
+            }
+        })
+
+    }
+
+    renderNavigation = () => {
+        if(this.state.totalItemsCount>10){
+            return (
                 <div className="d-flex justify-content-center">
                     <Pagination
                         activePage={this.state.activePage}
@@ -452,7 +548,6 @@ class Patients extends Component {
                               onValueChangeAffiliate={this.onValueChangeAffiliate}
                               handleChange={this.handleChange}
                               resetErrors={this.resetErrors}
-                              onDelete={this.onDelete}
                               onChangeInputFile={this.onChangeInputFile}
                               handleSubmit={this.handleSubmit}
                               list_cities={this.state.list_cities}
@@ -463,6 +558,8 @@ class Patients extends Component {
                     onSelectedDeleteUser={this.onSelectedDeleteUser}
                     dataEditUser={this.dataEditUser}
                     agePatient={this.agePatient}
+                    changeStatus={this.changeStatus}
+                    onDelete={this.onDelete}
                 />
 
                 {this.renderNavigation()}
