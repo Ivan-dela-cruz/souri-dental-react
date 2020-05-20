@@ -1,5 +1,6 @@
 import React from 'react';
-
+import {Link} from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
 
 function NavBar() {
@@ -7,30 +8,48 @@ function NavBar() {
         <div id="sidebar-menu" className="sidebar-menu">
             <ul>
                 <li className="menu-title">Panel de control</li>
-                <li className="active">
-                    <a href="index-2.html"><i className="fa fa-dashboard"></i> <span>Inicio</span></a>
+                <li >
+                    <Link to="/" > <i className="fa fa-dashboard"></i><span>Inicio</span></Link>
                 </li>
                 <li>
                     <a href="#"><i className="fa fa-user-md"></i> <span>Doctores</span></a>
                 </li>
                 <li>
-                    <a href="patients.html"><i className="fa fa-user"></i> <span>Pacientes</span></a>
+                    <NavLink activeClassName="text-primary" exact to="/">
+                        <i className="fa fa-book"></i> <span>Usuarios</span>
+                    </NavLink>
                 </li>
                 <li>
-                    <a href="appointments.html"><i className="fa fa-book"></i> <span>Citas</span></a>
-
-                </li>
-                <li>
-                    <a href="schedule.html"><i className="fa fa-calendar-check-o"></i> <span>Horarios de doctores</span></a>
+                    <NavLink activeClassName="text-primary" to="/pacientes">
+                        <i className="fa fa-calendar-check-o"></i> <span>Pacientes</span>
+                    </NavLink>
                 </li>
                 <li>
                     <a href="departments.html"><i className="fa fa-hospital-o"></i> <span>Departamentos</span></a>
                 </li>
                 <li className="submenu">
-                    <a href="#"><i className="fa fa-user"></i> <span> Empleados </span> <span
+                    <a href="#"><i className="fa fa-user"></i> <span> Usuarios </span> <span
                         className="menu-arrow"></span></a>
                     <ul >
-                        <li><a className="text-left" href="employees.html">Lista de empleados</a></li>
+                        <li>
+                            <NavLink className="text-left" activeClassName="text-primary" exact to="/">
+                                Lista de usuario
+                            </NavLink>
+                        </li>
+                        <li><a className="text-left" href="leaves.html">Hojas</a></li>
+                        <li><a className="text-left" href="holidays.html">Días festivos</a></li>
+                        <li><a className="text-left" href="attendance.html">Asistencia</a></li>
+                    </ul>
+                </li>
+                <li className="submenu">
+                    <a href="#"><i className="fa fa-user"></i> <span> Pacientes </span> <span
+                        className="menu-arrow"></span></a>
+                    <ul >
+                        <li>
+                            <NavLink className="text-left" activeClassName="text-primary"  to="/pacientes">
+                                Lista de pacientes
+                            </NavLink>
+                        </li>
                         <li><a className="text-left" href="leaves.html">Hojas</a></li>
                         <li><a className="text-left" href="holidays.html">Días festivos</a></li>
                         <li><a className="text-left" href="attendance.html">Asistencia</a></li>

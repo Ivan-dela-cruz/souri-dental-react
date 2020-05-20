@@ -1,2 +1,2 @@
-const url = 'http://localhost/souri-dental/public'
+const url = 'https://souridental.herokuapp.com'
 export default url

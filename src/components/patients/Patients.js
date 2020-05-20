@@ -395,7 +395,6 @@ class Patients extends Component {
                     })
                 })
 
-
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire(
                     'Cancelado',
@@ -496,7 +495,11 @@ class Patients extends Component {
                 Axios.put(`${url}/api/api-change-status-user`, {
                     'id': id
                 }).then(function (response) {
-
+                    Swal.fire(
+                        'Deshabilitado!',
+                        'El registro ha sido deshabilitado con éxito.',
+                        'success'
+                    )
                     this.resetPagination()
                     this.componentDidMount()
                     this.resetErrors()

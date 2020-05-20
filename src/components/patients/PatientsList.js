@@ -15,7 +15,7 @@ class PatientsList extends Component {
         }
         return (
             <React.Fragment>
-                <table className="table table-striped custom-table">
+                <table className="table table-striped custom-table table-responsive-lg">
                     <thead>
                     <tr>
                         <th className="text-left" style={{width: '200px'}}>Nombre</th>
